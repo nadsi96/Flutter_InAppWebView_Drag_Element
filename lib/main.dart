@@ -33,23 +33,74 @@ class MyHomePage extends StatelessWidget {
 
   var title;
 
+  late InAppWebViewController inAppWebViewController;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.blue,
-        appBar: AppBar(
-          title: Text(title),
+      backgroundColor: Colors.blue,
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: InAppWebView(
+              initialFile: "assets/slide_prac.html",
+              initialOptions: InAppWebViewGroupOptions(
+                  // disable scaling
+                  crossPlatform: InAppWebViewOptions(supportZoom: false)),
+              onWebViewCreated: (controller) {
+                inAppWebViewController = controller;
+              },
+              onConsoleMessage: (controller, consoleMessage) {
+                // 콘솔 찍히는거 출력
+                print("____________________Console Message");
+                print(consoleMessage);
+              },
+            ),
+          ),
+          SizedBox(
+            height: 40,
+            child: Row(
+              children: [
+                btn(dir: 'left'),
+                btn(dir: 'right'),
+                btn(dir: 'top'),
+                btn(dir: 'bottom'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget btn({required String dir}) {
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          sendMessageToWeb(dir);
+        },
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            color: Colors.blue,
+          ),
+          child: Center(
+            child: Text(dir, style: const TextStyle(fontSize: 20)),
+          ),
         ),
-        body: InAppWebView(
-          initialFile: "assets/slide_prac.html",
-          initialOptions: InAppWebViewGroupOptions(
-              // disable scaling
-              crossPlatform: InAppWebViewOptions(supportZoom: false)),
-          onConsoleMessage: (controller, consoleMessage) {
-            // 콘솔 찍히는거 출력
-            print("____________________Console Message");
-            print(consoleMessage);
-          },
-        ));
+      ),
+    );
+  }
+
+  // 웹으로 메시지 던지기
+  void sendMessageToWeb(msg) {
+    if (inAppWebViewController != null) {
+      print("========================sendMessageToWeb");
+      print(msg);
+      inAppWebViewController.evaluateJavascript(source: "appToWeb('$msg')");
+    }
   }
 }
