@@ -39,30 +39,6 @@ function changeDragDir(dir){
     }
 }
 
-function fromApp(msg){
-    if(msg){
-        let msgs = msg.split('|');
-        if(msgs.length == 2){
-            if(msgs[0] == "fromFlutter"){
-                if(msgs[1] == "android_backBtn"){
-                    openMsgBox();
-                }
-                else{
-                    g_result.innerHTML = msgs[1] || '';
-                }
-            }
-            else if(msgs[0] == "fromKotlin"){
-                if(msgs[1] == "android_backBtn"){
-                    openMsgBox();
-                }
-                else{
-                    g_result.innerHTML = msgs[1] || '';
-                }
-            }
-        }
-    }
-
-}
 function appToWeb(msg){
     if(msg){
         if(["left", "right", "top", "bottom"].includes(msg)){
